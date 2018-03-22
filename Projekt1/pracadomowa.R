@@ -98,8 +98,9 @@ fscore
 
 # Create matrix gen_matrix with random data: 10 columns, 100 rows, random numbers from 1 to 50 inside   
 
-gen_matrix <- matrix((1:50), nrow=100, ncol=10)
+gen_matrix <- matrix((runif(1000,1,50)), nrow=100, ncol=10)
 gen_matrix
+
 
 LIST
 #  Create list l_persons with 3 members from our course. Each person has: name, surname, test_results (vector), homework_results (vector)
@@ -125,24 +126,39 @@ df_comp_small <- data.frame(df_compensations$id_agenta, df_compensations$data_ot
 
 #  Create new data frame with aggregated data from df_comp_small 
 # (how many rows we have per each account, and what's the total value of recompensations in each account
-# Which agent recorded most recompensations (amount)? Is this the same who recorded most action? 
 
 df_comp_small
-df_comp_small %>% 
-group_by(df_compensations$konto) %>%
-summarise  (rows_number = count(df_compensations$kwota),  sum = sum(df_compensations$kwota))
 
+
+df_new <- df_comp_small %>% 
+  group_by(df_compensations.konto) %>% 
+  summarise (liczba = n(), total_compensation_value = sum(df_compensations.kwota)) 
+df_new
+
+# Which agent recorded most recompensations (amount)? Is this the same who recorded most action? 
+
+df_agent <- df_comp_small %>% 
+  group_by(df_compensations.id_agenta) %>% 
+  summarise (liczba = n(), total_compensation_value = sum(df_compensations.kwota)) 
+df_agent
+
+most_rec <- arrange(df_agent, desc(total_compensation_value))
+most_rec
+
+most_act <- arrange(df_agent, desc(liczba))
+most_act
 
 # Create loop (for) which will print random 100 values
 
-for (i in 1:10) print(i)
+for (i in sample(1:100)) 
+print(i)
 
 # Create loop (while) which will print random values (between 1 and 50) until 20 wont appear
 
 liczba <- 0
-while(liczba < 10) {
+while(liczba < 20) {
   print(liczba)
-  liczba <- liczba + 1
+  liczba <- sample(1:50, 1)
 }
 
   #  Add extra column into df_comp_small data frame called amount_category. 
@@ -156,4 +172,23 @@ df_comp_small
 sqlCreateTable(con, "new table", data.frame(df_comp_small), row.names = TRUE)
 
   # Fill values in amount_category. All amounts below average: 'small', All amounts above avg: 'high'
-  # Create function f_agent_stats which for given agent_id, will return total number of actions in all tables (analiza_wniosku, analiza_operatora etc)
+
+avg_kwota <- mean(df_comp_small$df_compensations.kwota)
+
+amount_category <- ifelse (df_comp_small$df_compensations.kwota < avg_kwota, 'small' ,'high')
+
+dbWriteTable(con, "df_comp_small", df_comp_small)
+
+df_comp_small
+avg_kwota
+
+
+  # Create function f_agent_stats which for given agent_id, 
+# will return total number of actions in all tables (analiza_wniosku, analiza_operatora etc)
+
+f_agents_stats <- 
+  
+  df_agent <- df_comp_small %>% 
+  group_by(df_compensations.id_agenta) %>% 
+  summarise (liczba = n(), total_compensation_value = sum(df_compensations.kwota)) 
+df_agent
