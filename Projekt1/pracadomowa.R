@@ -175,12 +175,9 @@ sqlCreateTable(con, "new table", data.frame(df_comp_small), row.names = TRUE)
 
 avg_kwota <- mean(df_comp_small$df_compensations.kwota)
 
-amount_category <- ifelse (df_comp_small$df_compensations.kwota < avg_kwota, 'small' ,'high')
+df_comp_small$amount_category <- ifelse (df_comp_small$df_compensations.kwota < avg_kwota, 'small' ,'high')
 
 dbWriteTable(con, "df_comp_small", df_comp_small)
-
-df_comp_small
-avg_kwota
 
 
   # Create function f_agent_stats which for given agent_id, 
