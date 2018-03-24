@@ -1,0 +1,8 @@
+install.packages("tm")
+install.packages("SnowballC")
+install.packages("wordcloud")
+install.packages("RColorBrewer")
+library(tm)
+library(SnowballC)
+library(wordcloud)
+library(RColorBrewer)
