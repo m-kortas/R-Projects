@@ -1,3 +1,12 @@
+install.packages("caroline")
+install.packages("devtools")
+install.packages("openxlsx")
+install.packages("XML")
+install.packages("RCurl")
+install.packages("rjson")
+install.packages("RPostgreSQL")
+
+
 library(caroline)
 
 library(devtools)
