@@ -193,16 +193,13 @@ server <- function(input, output,session) {
   }
   
   # Associations (Magda)
-
-  find_ass()
   output$find_ass <- renderPrint({
     findAssocs(dtm, terms = input$ass_text, corlimit = input$ass_cor)
   })
 
+  # Word Freq (Magda)
   
-  results()
-  output$results <-renderDataTable(df2)
-  
+  word_freq_magda()
   output$word_freq_magda <- renderPlot({
     ggplot(data = head(d,50), mapping = aes(x = reorder(word, freq), y = freq)) +
       geom_bar(stat = "identity") +
@@ -210,6 +207,11 @@ server <- function(input, output,session) {
       ylab("Word frequency") +
       coord_flip() 
   }, bg="transparent")
+  
+  # General results (Magda)
+  
+  results()
+  output$results <-renderDataTable(df2)
   
 }
 
@@ -231,42 +233,29 @@ results <- function() {      #funkcja results Magdy
 }
 
 
-word_freq_magda <- function() {   # word frequency
-  
+word_freq_magda <- function() {   # word frequency Magdy
   library(tm)
   library(SnowballC)
   library(wordcloud)
   library(RColorBrewer)
   library(tidyverse)
-  
   filePath <- "parties_en.txt"
   text <- read_lines(filePath)
   docs <- Corpus(VectorSource(text))
-  
   docs <- tm_map(docs, tolower) #mniejszy rozmiar
   docs <- tm_map(docs, removeNumbers) #numerki
   docs <- tm_map(docs, removeWords, stopwords("english")) #usuwanie
   docs <- tm_map(docs, removePunctuation) #punktuacja
   docs <- tm_map(docs, stripWhitespace) #białeznaki
-  
   docs2 <-tm_map(docs, stemDocument)   #słowa kluczowe
   dtm <<- TermDocumentMatrix(docs2)      #matryca słów
   m   <- as.matrix(dtm)                   #na matrycę
   v   <- sort(rowSums(m), decreasing=TRUE)   #sortowanie według ilości dec
   d   <<- data.frame(word=names(v), freq=v)  #nowa data frame: słowo, ilość
-  
-  # bar chart
-  ggplot(data = head(d,50), mapping = aes(x = reorder(word, freq), y = freq)) +
+    ggplot(data = head(d,50), mapping = aes(x = reorder(word, freq), y = freq)) +
     geom_bar(stat = "identity") +
     xlab("Word") +
     ylab("Word frequency") +
     coord_flip() }
-
- # find associations
-
-find_ass <- function () {
-  library(tm)
-  findAssocs(dtm, terms = input$ass_text, corlimit = input$ass_cor)
-}
 
 shinyApp(ui, server)
