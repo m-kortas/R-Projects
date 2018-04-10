@@ -6,15 +6,9 @@ install.packages("httpuv")
 library(rtweet)
 library(httpuv)
 
-# whatever name you assigned to your created app
 appname <- "magda_sentiment_analysis"
-
-## api key (example below is not a real key)
-key <- "3d09h36rBQoSThXzaHqnIaezI"
-
-## api secret (example below is not a real key)
-secret <- "omOF174fJEj8OfwlHUNWfrdtt4NlY9tPyxH7igQcvy3dscOEb3"
-
+key <- "Cw4v8f0xPkjZz1UTLTTI8czoq"
+secret <- "HZ6RKMn9LJI6oMvUomN7ZxBxyXSZSeXvXOG15DTNArAv5waKvc"
 
 twitter_token <- create_token(
   app = appname,

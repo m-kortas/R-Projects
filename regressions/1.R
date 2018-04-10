@@ -34,7 +34,8 @@ cor(cars$speed, cars$dist)
 
 # 1.6. Model liniowy
 
-linear
+linearMod <- lm(dist ~ speed, data=cars)
+print(linearMod)
 
 
 
@@ -47,70 +48,76 @@ linear
   data("airquality")
 ?airquality
 
+  str(airquality)
+  head(airquality)
 
 # 2.2. Przygotowanie danych
 
 # Sprawdź dokumentację dla funkcji mapply
+  ?mapply
 
 # Sprawdź czy występują kolumny z brakującymi danymi
+  col1 <-mapply(anyNA, airquality)
+  col1
 
 # Zmień brakujące wartości na miesięczną średnią, osobno dla Ozonu i Solar.R
+for (i in 1:nrow(airquality)){
+  if(is.na(airquality[i, "Ozone"])){
+    airquality[i,"Ozone"] <- mean(airquality[which(airquality[,"Month"]==airquality[i, "Month"]),
+                                   "Ozone"],na.rm = TRUE)
+}
+  if(is.na(airquality[i, "Solar.R"])){
+    airquality[i,"Solar.R"] <- mean(airquality[which(airquality[,"Month"]==airquality[i, "Month"]),
+                                             "Solar.R"],na.rm = TRUE)
+  }
+}
 
+normalize <- function(x){
+  return((x-min(x))/(max(x)-min(x)))
+}
 
+airquality$Ozone <- normalize(airquality$Ozone)
+airquality$Solar.R <- normalize(airquality$Solar.R)
 
+str(airquality)
 
 # 2.3. Regresja liniowa z wykorzystaniem funkcli lm
 
 
 # Badamy jak promieniowanie słoneczne wpływa na ozon
 
+Y <- airquality[, "Ozone"]
+X <- airquality[, "Solar.R"]
+
+model1<- lm(Y~X)
+model1
+
+plot(Y~X)
+abline(model1, col="blue", lwd=3)
+?abline
+
 # Badamy jak wiatr wpływa na ozon
 
+Y <- airquality[, "Ozone"]
+Z <- airquality[, "Wind"]
 
+model2<- lm(Y~Z)
+model2
+
+plot(Y~Z)
+abline(model2, col="blue", lwd=3)
+?abline
 
 # 2.4. Predykcja 
-
-
 # Predykcja ozonu dla promieniowania słonecznego = 10
+
+p1 <- predict(model1, data.frame("X"=0.1))
+p1
 
 # Predykcja ozonu dla wiatru = 5
 
+p2 <- predict(model2, data.frame("Z"=0.2))
+p2
 
 
 
-
-# 3. Implementacja gradientu
-
-  # 3.1. Generujemy losowy ciąg danych, w których y jest (zniekształconą) funkcją x
-  
-  # 3.2. Dopasowanie modelu regresji liniowej do danych
-  
-  # 3.3. Wizualizacja modelu
-  
-  # 3.4. Definiujemy funkcję kosztu
-  
-  # 3.5. Learning rate i limit iteracji
-  
-# 3.6. Historia (do wykresu później)
-
-# 3.7. Inicjalizacja parametrów
-
-# 3.8. Dodajemy kolumnę z 1'kami dla wyrazu wolnego
-
-# 3.9. Gradient prosty
-
-# 3.10. Wizualizacja danych
-
-# 3.11. Funkcja kosztu dla kolejnych iteracji
-
-
-
-
-# ZADANIE
-  
-  # Zadanie: zeksploruj dataset mtcars. Poszukaj interesujących zależności pomiędzy danymi.
-  # Zaprezentuje wyniki, np w Shiny.
-  
-  data("mtcars")
-head(mtcars)
-?mtcars
