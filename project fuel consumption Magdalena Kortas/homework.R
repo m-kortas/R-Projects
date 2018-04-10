@@ -6,6 +6,7 @@ head(mtcars)
 ?mtcars
 str(mtcars)
 
+mtcars
 # Scatter plot - sprawdzamy czy może istnieć liniowa zależnośc pomiędzy zmiennymi.
 par(mfrow=c(3,4))
 
