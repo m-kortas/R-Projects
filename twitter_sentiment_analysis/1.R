@@ -47,3 +47,7 @@ smolensk_tweets %>%
 
 top20 <- arrange(smolensk_tweets, desc(favorite_count))
 head(top20, n = 20)
+
+#plot FAV~RETWEET
+plot(smolensk_tweets$retweet_count~smolensk_tweets$favorite_count)
+abline(lm(smolensk_tweets$retweet_count~smolensk_tweets$favorite_count), col="blue", lwd=3)
