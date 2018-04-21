@@ -31,3 +31,21 @@ plot(ROCRperf, colorize = TRUE)
 auc <- performance(ROCRpred, measure = "auc")
 auc <- auc@y.values[[1]]
 auc
+
+########## correspondence analysis
+library(FactoMineR)
+library(factoextra)
+library(gplots)
+head(titanic_train)
+
+titanic_ca <- titanic_train[c("Fare", "Pclass")]
+
+# dt <- as.table(as.matrix(titanic_ca))   # to table 
+dt <- table(titanic_ca)   # to table 
+
+titanic_result <- CA(dt, graph =FALSE)
+
+eig.val <- get_eigenvalue(titanic_result)  #eigenvalue wyjaśnienie zależności
+
+fviz_ca_biplot(titanic_result, col.row = "contrib")
+
