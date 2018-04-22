@@ -28,7 +28,6 @@ abline(lm(mtcars$wt ~ mtcars$mpg), col="blue", lwd=3)
 scatter.smooth(x=mtcars$mpg, y=mtcars$qsec, main="MPG & qsec") #słaba zależność
 abline(lm(mtcars$qsec ~ mtcars$mpg), col="blue", lwd=3)
 
-
 scatter.smooth(x=mtcars$mpg, y=mtcars$vs, main="MPG & vs")  # proporcjonalnie (duży błąd)
 abline(lm(mtcars$vs ~ mtcars$mpg), col="blue", lwd=3)
 
