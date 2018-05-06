@@ -189,3 +189,25 @@ f_agents_stats <-
   group_by(df_compensations.id_agenta) %>% 
   summarise (liczba = n(), total_compensation_value = sum(df_compensations.kwota)) 
 df_agent
+
+####
+
+db_szczeg_rekom <- dbReadTable(con, "szczegoly_rekompensat")
+db_analiza_wnios <- dbReadTable(con, "analizy_wnioskow")
+db_analiza_prawna <- dbReadTable(con, "analiza_prawna")
+db_analiza_operatora <- dbReadTable(con, "analiza_operatora")
+db_dokumenty <- dbReadTable(con, "dokumenty")
+
+agent_sr <- db_szczeg_rekom$id_agenta
+agent_aw <- db_analiza_wnios$id_agenta
+agent_ap <- db_analiza_prawna$agent_id
+agent_ao <- db_analiza_operatora$agent_id
+agent_d <- db_dokumenty$agent_id
+
+
+f_agent_stats_2 <- function(id_ag) {
+  wartosc_ag <- sum(agent_aw==id_ag) + sum(agent_ao==id_ag) + sum(agent_ap==id_ag) + sum(agent_d==id_ag) + sum(agent_sr==id_ag)
+  return (wartosc_ag)
+}
+
+f_agent_stats_2(34)  # sprawdzam dla agenta 34 - liczba wystąpień 56
