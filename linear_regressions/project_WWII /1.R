@@ -5,6 +5,12 @@ library(XML)
 library(RCurl)
 library(e1071)
 
+library(ROCR)
+library(text2vec)
+library(data.table)
+library(magrittr)
+library(glmnet)
+
 
 # Is there a relationship between the daily minimum and maximum temperature? 
 # Can you predict the maximum temperature given the minimum temperature? 
@@ -14,8 +20,13 @@ weather
 head(weather)
 str(weather)
 
-weather2 <- weather[c("MinTemp", "MaxTemp")]
+weather <- filter(weather, weather$STA == "10001")
 
+weather$STA
+
+weather2 <- weather[c("MinTemp", "MaxTemp")]
+mapply(anyNA,weather2)
+weather2 <- na.omit(weather2)
 #####
 
 scatter.smooth(x=weather2$MaxTemp, y=weather2$MinTemp, main="Max & Min") 
@@ -43,14 +54,33 @@ setDT(weather2)  # do data table
 
 set.seed(9999)  # randomowe
 weather2$id <- seq.int(nrow(weather2))  #dodanie id
-setkey(weather2)
-
+setkey(weather2, id)
 
 weather_id = weather2$id
+mapply(anyNA,weather2)
 train_id = sample(weather_id, 83000)
 test_id = setdiff(weather_id, train_id)
 train = weather2[J(train_id)]
 test = weather2[J(test_id)]
 
 # Is there a relationship between the daily minimum and maximum temperature? YES
-# Can you predict the maximum temperature given the minimum temperature? YES   min_temp*1.87=max_temp
+Y = train$MinTemp
+X = train$MaxTemp
+model1<- lm(Y~X)
+summary(model1) #Multiple R-squared:  0.7724
+
+# Can you predict the maximum temperature given the minimum temperature? YES  
+
+preds1 <- predict(model1, data.frame("Y"= test$MinTemp))
+final_data <- cbind(test, preds1)
+
+# policzyc MSE 
+library(Metrics)
+mse(final_data$MaxTemp, final_data$preds1)
+
+plot(final_data$MaxTemp, final_data$preds1)
+abline(model1, col="blue", lwd=3)
+
+
+scatter.smooth(x=weather2$MaxTemp, y=weather2$MinTemp, main="Max & Min") 
+abline(lm(weather2$MinTemp~ weather2$MaxTemp), col="blue", lwd=3)
