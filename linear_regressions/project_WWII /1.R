@@ -15,18 +15,15 @@ library(glmnet)
 # Is there a relationship between the daily minimum and maximum temperature? 
 # Can you predict the maximum temperature given the minimum temperature? 
 
-weather
+weather <- read.csv("~/R-Projects/linear_regressions/weather.csv", header=TRUE)
 
 head(weather)
 str(weather)
 
-weather <- filter(weather, weather$STA == "10001")
-
-weather$STA
-
 weather2 <- weather[c("MinTemp", "MaxTemp")]
 mapply(anyNA,weather2)
 weather2 <- na.omit(weather2)
+
 #####
 
 scatter.smooth(x=weather2$MaxTemp, y=weather2$MinTemp, main="Max & Min") 
@@ -67,20 +64,31 @@ test = weather2[J(test_id)]
 Y = train$MinTemp
 X = train$MaxTemp
 model1<- lm(Y~X)
+model1
 summary(model1) #Multiple R-squared:  0.7724
-
 # Can you predict the maximum temperature given the minimum temperature? YES  
 
 preds1 <- predict(model1, data.frame("Y"= test$MinTemp))
 final_data <- cbind(test, preds1)
 
 # policzyc MSE 
-library(Metrics)
-mse(final_data$MaxTemp, final_data$preds1)
+library(Metrics)  
+
+mse(final_data$MaxTemp, final_data$preds1) ### 217.2219
 
 plot(final_data$MaxTemp, final_data$preds1)
 abline(model1, col="blue", lwd=3)
 
+### dataset
 
-scatter.smooth(x=weather2$MaxTemp, y=weather2$MinTemp, main="Max & Min") 
-abline(lm(weather2$MinTemp~ weather2$MaxTemp), col="blue", lwd=3)
+weather3 <- weather[c("STA", "MinTemp", "MaxTemp")]
+
+library(tidyverse)
+rozne <- weather3 %>%
+  group_by(STA) %>%
+  summarise(sred_amplit = mean(MaxTemp-MinTemp), 
+            med_aplit = median(MaxTemp-MinTemp), liczba = n()) 
+rozne
+# duża różnorodność geograficzna
+# średnie amplitudy temperatur od 3,95 (salinas, ewador) do 17 (luxor, egypt) stopni
+
