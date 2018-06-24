@@ -33,9 +33,15 @@ glm_model <- glm(chocolate ~ caramel + peanutyalmondy + nougat + hard + bar + pl
 
 if_chocolate <- predict(glm_model, train, type="response")  #prediction
 
+if_chocolate
+
 chocolate_results <- cbind(train, if_chocolate) #łączenie do tabelki
 
+chocolate_results
+
 table(train$chocolate, if_chocolate > 0.9)  #matryca TRUE positives i FALSE negatives
+
+
 
 ######################
 
@@ -48,5 +54,6 @@ plot(ROCRperf, colorize = TRUE)
 table(test$chocolate, preds > 0.9)
 final_data <- cbind(test, preds)
 
+final_data
 glmnet:::auc(test$chocolate, preds)   #### AUC    0.833
 
