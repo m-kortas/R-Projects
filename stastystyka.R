@@ -45,3 +45,35 @@ hist(mydist)
 
 ecdf(mydist)(2)
 pnorm(2)
+
+X <- c(1, 11, 2, 3, 1, 3, 3, 1, 1, 1)
+X
+plot(density(X))
+plot(density(log(X)))
+
+data <- data("USArrests")
+USArrests$Murder
+USArrests$Assault
+USArrests$Rape
+plot(density(USArrests$Murder))
+plot(density(USArrests$Assault))
+plot(density(USArrests$Rape))
+plot(density(USArrests$UrbanPop))
+
+patients <- c(1.5, 2.9, 0.9, 3.9, 3.2, 2.1)
+patients.mean <- mean(patients)
+patients.sd <- sqrt(sum((patients - patients.mean)^2/(6-1)))
+patients.sd
+
+
+election <- c(rep(0,57), rep(1,43))
+election
+election.mean <- mean(election)
+election.sd <- sqrt(sum((election - election.mean)^2/(100-1)))
+election.sd
+sd(election)
+est.sd <- election.sd/10
+
+pnorm(-4)+pnorm(4, lower.tail = F)
+options(scipen=50)
+pnorm(-4)+pnorm(4, lower.tail = F)
