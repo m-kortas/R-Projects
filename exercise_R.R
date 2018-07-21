@@ -19,8 +19,13 @@ while (liczba <10){
 }
 
 
+
 X <- c(3,2,4)
 Y <- c(1,2)
 
 Z <- X*Y
 Z
+
+
+qt(0.975, df=3)
+pchisq(4, df=3, lower.tail=F)
